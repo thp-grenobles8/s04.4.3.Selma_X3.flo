@@ -6,30 +6,47 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+# remise à zéro des tables
+print "clear User:"
 User.destroy_all
-puts "clear User: done"
+puts " ✔"
+print "clear City:"
 City.destroy_all
-puts "clear City: done"
+puts " ✔"
+print "clear Tag:"
 Tag.destroy_all
-puts "clear Tag: done"
+puts " ✔"
+print "clear JoinTableGossipTagable:"
 JoinTableGossipTag.destroy_all
-puts "clear JoinTableGossipTagable: done"
+puts " ✔"
+print "clear Gossip:"
 Gossip.destroy_all
-puts "clear Gossip: done"
+puts " ✔"
+print "clear PrivateMessage:"
 PrivateMessage.destroy_all
-puts "clear PrivateMessage: done"
+puts " ✔"
+print "clear JoinTablePrivateMessageUser:"
 JoinTablePrivateMessageUser.destroy_all
-puts "clear JoinTablePrivateMessageUser: done"
+puts " ✔"
+print "clear Comment:"
+Comment.destroy_all
+puts " ✔"
+print "clear Like:"
+Like.destroy_all
+puts " ✔ \n\n"
 
-puts 'create City'
+
+# création des tables
+print 'create City'
 10.times do |index|
   City.create(
     name: Faker::Address.city,
     zip_code: Faker::Address.zip_code
   )
 end
+puts " ✔"
 
-puts 'create User'
+print 'create User'
 10.times do |index|
   User.create(
     first_name: Faker::Name.first_name,
@@ -40,8 +57,9 @@ puts 'create User'
     city: City.all.sample
   )
 end
+puts " ✔"
 
-puts 'create Gossip'
+print 'create Gossip'
 20.times do |index|
   Gossip.create(
     title: Faker::Book.title,
@@ -49,15 +67,17 @@ puts 'create Gossip'
     user: User.all.sample
   )
 end
+puts " ✔"
 
-puts 'create Tag'
+print 'create Tag'
 10.times do |index|
   Tag.create(
     title: Faker::Book.genre
   )
 end
+puts " ✔"
 
-puts 'create JoinTableGossipTag'
+print 'create JoinTableGossipTag'
 Gossip.all.each do |g|
   t = rand(1..5)
   t.times do |index|
@@ -67,16 +87,18 @@ Gossip.all.each do |g|
     )
   end
 end
+puts " ✔"
 
-puts 'create PrivateMessage'
+print 'create PrivateMessage'
 10.times do |index|
   PrivateMessage.create(
     content: Faker::Lorem.words(30).join(' ').capitalize,
     sender: User.all.sample
   )
 end
+puts " ✔"
 
-puts 'create JoinTablePrivateMessageUser'
+print 'create JoinTablePrivateMessageUser'
 PrivateMessage.all.each do |pm|
   r = rand(1..5)
   r.times do |index|
@@ -86,3 +108,32 @@ PrivateMessage.all.each do |pm|
     )
   end
 end
+puts " ✔"
+
+print 'create Comment'
+20.times do |index|
+  Comment.create(
+    author: User.all.sample,
+    gossip: Gossip.all.sample,
+    content: Faker::Lorem.words(15).join(' ').capitalize
+  )
+end
+puts " ✔"
+
+print 'create Like'
+20.times do |index|
+  is_gossip = [true, false].sample
+
+  if is_gossip
+    Like.create(
+      gossip: Gossip.all.sample,
+      user: User.all.sample
+    )
+  else
+    Like.create(
+      comment: Comment.all.sample,
+      user: User.all.sample
+    )
+  end
+end
+puts " ✔"
